@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# TypeScript compiled output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+
+# Mac system files
+.DS_Store
+
+# Editor folders/files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Debug output
+coverage/
+*.tsbuildinfo
+
+# Optional: Ignore SQLite DB file (if included locally)
+*.sqlite
+*.db
