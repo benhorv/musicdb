@@ -3,11 +3,13 @@ const typeDefs = `#graphql
   type Album {
     id: ID!
     title: String!
+    tracks: [Track!]!
   }
 
   type Artist {
     id: ID!
     name: String!
+    albums: [Album!]!
   }
 
   type Track {
@@ -17,6 +19,8 @@ const typeDefs = `#graphql
     milliseconds: Int!
     bytes: Int!
     price: Float!
+    albums: [Album!]!
+    artists: [Artist!]!
   }
 
   type Query {
