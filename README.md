@@ -44,6 +44,18 @@ Implemented queries:
 
 The command above installs all dependencies listed in `package.json`.
 
+#### Download the database file
+
+You have to download the database file from [here](https://www.sqlitetutorial.net/wp-content/uploads/2018/03/chinook.zip). Then create a database directory in the project root and copy it there. Be careful, the filename must be `chinook.db`.
+
+##### On linux:
+
+```bash
+cd musicdb
+mkdir database
+cp path/to/chinook.db ./database/chinook.db
+```
+
 #### Run the server:
 
 `npm start`
