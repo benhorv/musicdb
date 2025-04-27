@@ -162,4 +162,23 @@ query {
 }
 ```
 
+##### Returns album and the associated tracks
+
+```gql
+query {
+  album(id: 6) {
+    id
+    title
+    tracks {
+      id
+      name
+      composer
+      milliseconds
+      bytes
+      price
+    }
+  }
+}
+```
+
 ## Run tests
