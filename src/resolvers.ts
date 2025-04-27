@@ -1,4 +1,4 @@
-import { connectToDb } from './db';
+import { connectToDb } from './db.js';
 import fuzzysort from 'fuzzysort';
 
 export const resolvers = {
@@ -6,7 +6,6 @@ export const resolvers = {
         albums: async (_, args: { title?: string }) => {
             const db = await connectToDb();
             const albums = await db.all('SELECT * FROM albums');
-
             if (args.title) {
                 const result = fuzzysort.go(args.title, albums, { key: 'Title' });
 
@@ -47,18 +46,28 @@ export const resolvers = {
         },
     },
     Artist: {
+        id: (artist) => artist.ArtistId,
+        name: (artist) => artist.Name,
         albums: async (parent: any) => {
             const db = await connectToDb();
             return db.all(`SELECT * FROM albums WHERE ArtistId = ?`, [parent.id]);  
         }
     },
     Album: {
+        id: (album) => album.AlbumId,
+        title: (album) => album.Title,
         tracks: async (parent: any) => {
             const db = await connectToDb();
             return db.all(`SELECT * FROM tracks WHERE AlbumId = ?`, [parent.id]);  
         }
     },
     Track: {
+        id: (track) => track.TrackId,
+        name: (track) => track.Name,
+        composer: (track) => track.Composer,
+        milliseconds: (track) => track.Milliseconds,
+        bytes: (track) => track.Bytes,
+        price: (track) => track.UnitPrice,
         album: async (parent: any) => {
             const db = await connectToDb();
             return db.get(`SELECT * FROM albums WHERE AlbumId = ?`, [parent.AlbumId]);  
@@ -73,7 +82,7 @@ export const resolvers = {
                     tracks JOIN albums ON tracks.AlbumId = albums.AlbumId
                     WHERE tracks.TrackId = ?
                 )
-                `, [parent.id]);  
+                `, [parent.TrackId]);  
         }
     },
 };
