@@ -1,4 +1,4 @@
-const typeDefs = `#graphql
+export const typeDefs = `#graphql
 
   type Album {
     id: ID!
@@ -20,7 +20,7 @@ const typeDefs = `#graphql
     bytes: Int!
     price: Float!
     album: Album!
-    artists: Artist! # relation via Album
+    artist: Artist! # relation via Album
   }
 
   type Query {
