@@ -18,20 +18,54 @@ export const resolvers = {
             }
             return albums;
         },
-        album: (_, { id }) => {
-            
+        album: async (_, args: { id: string }) => {
+            const db = await connectToDb();
+            return db.get(`SELECT * FROM albums WHERE id = ${args.id}`);
         },
-        artists: (_, { id }) => {
-            
+        artists: async (_, args: { name?: string }) => {
+            const db = await connectToDb();
+            const artists = await db.all('SELECT * FROM artists');
+
+            if (args.name) {
+                const result = fuzzysort.go(args.name, artists, { key: 'Name' });
+
+                const filtered = result
+                    .filter(r => r.score >= 0.9)
+                    .map(r => r.obj);
+                
+                return filtered;
+            }
+            return artists;
         },
-        artist: (_, { id }) => {
-            
+        artist: async (_, args: { id: string }) => {
+            const db = await connectToDb();
+            return db.get(`SELECT * FROM artists WHERE id = ${args.id}`);
         },
-        track: (_, { id }) => {
-            
+        track: async (_, args: { id: string }) => {
+            const db = await connectToDb();
+            return db.get(`SELECT * FROM tracks WHERE id = ${args.id}`);
+        },
+    },
+    Artist: {
+        albums: async (parent: any) => {
+            const db = await connectToDb();
+            return db.all(`SELECT * FROM albums WHERE id = ${parent.id}`);  
         }
     },
-    Album: {},
-    Artist: {},
-    Track: {},
+    Album: {
+        tracks: async (parent: any) => {
+            const db = await connectToDb();
+            return db.all(`SELECT * FROM tracks WHERE id = ${parent.id}`);  
+        }
+    },
+    Track: {
+        albums: async (parent: any) => {
+            const db = await connectToDb();
+            return db.all(`SELECT * FROM albums WHERE id = ${parent.id}`);  
+        },
+        artists: async (parent: any) => {
+            const db = await connectToDb();
+            return db.all(`SELECT * FROM artists WHERE id = ${parent.id}`);  
+        }
+    },
 };
