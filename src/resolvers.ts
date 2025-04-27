@@ -20,7 +20,7 @@ export const resolvers = {
         },
         album: async (_, args: { id: string }) => {
             const db = await connectToDb();
-            return db.get(`SELECT * FROM albums WHERE id = ${args.id}`);
+            return db.get(`SELECT * FROM albums WHERE AlbumId = ?`, [args.id]);
         },
         artists: async (_, args: { name?: string }) => {
             const db = await connectToDb();
@@ -39,33 +39,41 @@ export const resolvers = {
         },
         artist: async (_, args: { id: string }) => {
             const db = await connectToDb();
-            return db.get(`SELECT * FROM artists WHERE id = ${args.id}`);
+            return db.get(`SELECT * FROM artists WHERE ArtistId = ?`, [args.id]);
         },
         track: async (_, args: { id: string }) => {
             const db = await connectToDb();
-            return db.get(`SELECT * FROM tracks WHERE id = ${args.id}`);
+            return db.get(`SELECT * FROM tracks WHERE TrackId = ?`, [args.id]);
         },
     },
     Artist: {
         albums: async (parent: any) => {
             const db = await connectToDb();
-            return db.all(`SELECT * FROM albums WHERE id = ${parent.id}`);  
+            return db.all(`SELECT * FROM albums WHERE ArtistId = ?`, [parent.id]);  
         }
     },
     Album: {
         tracks: async (parent: any) => {
             const db = await connectToDb();
-            return db.all(`SELECT * FROM tracks WHERE id = ${parent.id}`);  
+            return db.all(`SELECT * FROM tracks WHERE AlbumId = ?`, [parent.id]);  
         }
     },
     Track: {
-        albums: async (parent: any) => {
+        album: async (parent: any) => {
             const db = await connectToDb();
-            return db.all(`SELECT * FROM albums WHERE id = ${parent.id}`);  
+            return db.get(`SELECT * FROM albums WHERE AlbumId = ?`, [parent.AlbumId]);  
         },
-        artists: async (parent: any) => {
+        artist: async (parent: any) => {
             const db = await connectToDb();
-            return db.all(`SELECT * FROM artists WHERE id = ${parent.id}`);  
+            return db.get(`
+                SELECT * FROM artists
+                WHERE artists.ArtistId = (
+                    SELECT albums.ArtistId
+                    FROM
+                    tracks JOIN albums ON tracks.AlbumId = albums.AlbumId
+                    WHERE tracks.TrackId = ?
+                )
+                `, [parent.id]);  
         }
     },
 };
