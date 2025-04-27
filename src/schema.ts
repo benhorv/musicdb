@@ -19,8 +19,8 @@ const typeDefs = `#graphql
     milliseconds: Int!
     bytes: Int!
     price: Float!
-    albums: [Album!]!
-    artists: [Artist!]!
+    album: Album!
+    artists: Artist! # relation via Album
   }
 
   type Query {
