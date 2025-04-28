@@ -205,3 +205,7 @@ query {
 ```
 
 ## Run tests
+
+Run the test with
+
+`npm test`
