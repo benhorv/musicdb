@@ -8,7 +8,7 @@ This application is created for the purpose of testing my development skills for
 ## What can it do
 
 The application manages data and relations in the given music database.
-A standalone Apollo server runs under the hood, which uses Express in the background. The exposed endpoint for GraphQL access is `/gql`.
+A standalone [Apollo](https://www.apollographql.com/) server runs under the hood, which [uses Express](https://www.apollographql.com/docs/apollo-server/api/standalone) in the background. The exposed endpoint for [GraphQL](https://graphql.org/) access is `/gql`.
 
 ## Data format
 
@@ -26,9 +26,16 @@ Implemented queries:
 ⁠- artist(id: ID!): Retrieves a specific artist by their ID.
 - track(id: ID!): Retrieves a specific track by its ID.
 
+FYI: The lookup based on match percentage is done with [fuzzysort](https://github.com/farzher/fuzzysort#readme).
+
 ## Usage
 
 ### Startup
+
+Running the project requires `nodejs` and `npm`. 
+The best way to install them is using `nvm`.
+
+For further instructions have a look at the [official download page](https://nodejs.org/en/download).
 
 #### Clone the repo:
 
@@ -65,7 +72,7 @@ This starts the server on port 4000.
 ### Query
 
 `npm start` starts a server on `http://localhost:4000/`. You can access the GraphQL endpoint at `http://localhost:4000/gql`.
-You can test the application straigh away opening `http://localhost:4000/gql` in your browser, which opens the Apollo GraphQL sandbox UI.
+The application can be tested straightaway at `http://localhost:4000/gql` in your browser, which opens the Apollo GraphQL sandbox UI.
 
 #### Example queries
 
@@ -206,6 +213,8 @@ query {
 
 ## Run tests
 
-Run the test with
+[Vitest](https://vitest.dev/) is used for testing. I chose this because it works with TypeScript out of the box.
+
+Run the tests with
 
 `npm test`
