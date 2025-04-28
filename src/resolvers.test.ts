@@ -49,8 +49,7 @@ vi.mock('../src/db', () => ({
     }
     return Promise.resolve(null);
   }),
-  getAllAlbumsByArtistId: vi.fn((_, params: any[]) => {
-    const id = params[0];
+  getAllAlbumsByArtistId: vi.fn((_, id: any) => {
     if (id == "1") {
       return Promise.resolve([
         { AlbumId: 1, Title: 'Good Album 1' },
@@ -64,8 +63,8 @@ vi.mock('../src/db', () => ({
     }
     return Promise.resolve([]);
   }),
-  getAllTracksByArtistId: vi.fn((_, params: any[]) => {
-    const id = params[0];
+  getAllTracksByArtistId: vi.fn((_, params: any) => {
+    const id = params;
     if (id == "1") {
       return Promise.resolve([
         { TrackId: 1, Name: 'Worm', AlbumId: "1" },
@@ -83,11 +82,7 @@ vi.mock('../src/db', () => ({
     if (id == "1") {
       return Promise.resolve([
         { TrackId: 1, Name: 'Worm', AlbumId: "1" },
-      ]);
-    }
-    if (id == "2") {
-      return Promise.resolve([
-        { TrackId: 2, Name: '444888', AlbumId: "1" },
+        { TrackId: 2, Name: '444888', AlbumId: "1" }
       ]);
     }
     return Promise.resolve([]);
@@ -311,5 +306,94 @@ describe('Query track', () => {
     await expect(resolvers.Query.track(null, { id: "1" }))
       .rejects
       .toThrow('Failed to fetch track');
+  });
+});
+
+describe('Artist albums resolver', () => {
+  it('should return albums for a valid artist', async () => {
+
+    const artist = { ArtistId: 1 };
+    const result = await resolvers.Artist.albums(artist);
+
+    expect(result).toEqual([
+      { AlbumId: 1, Title: 'Good Album 1' },
+      { AlbumId: 3, Title: 'Better Album 1' },
+    ]); 
+  });
+
+  it('should return an empty array for an invalid artist', async () => {
+    const artist = { ArtistId: 999 };
+    const result = await resolvers.Artist.albums(artist);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should throw an error if database connection fails while fetching artist albums', async () => {
+    (connectToDb as any).mockRejectedValueOnce(new Error('Failed to fetch albums'));
+
+    const artist = { ArtistId: 1 };
+
+    await expect(resolvers.Artist.albums(artist))
+      .rejects
+      .toThrow('Failed to fetch albums');
+  });
+});
+
+describe('Artist tracks resolver', () => {
+  it('should return albums for a valid artist', async () => {
+
+    const artist = { ArtistId: 1 };
+    const result = await resolvers.Artist.tracks(artist);
+
+    expect(result).toEqual([
+      { TrackId: 1, Name: 'Worm', AlbumId: "1" }
+    ]); 
+  });
+
+  it('should return an empty array for an invalid artist', async () => {
+    const artist = { ArtistId: 999 };
+    const result = await resolvers.Artist.tracks(artist);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should throw an error if database connection fails while fetching artist tracks', async () => {
+    (connectToDb as any).mockRejectedValueOnce(new Error('Failed to fetch tracks'));
+
+    const artist = { ArtistId: 1 };
+
+    await expect(resolvers.Artist.tracks(artist))
+      .rejects
+      .toThrow('Failed to fetch tracks');
+  });
+});
+
+describe('Album tracks resolver', () => {
+  it('should return tracks for a valid album', async () => {
+
+    const album = { AlbumId: 1 };
+    const result = await resolvers.Album.tracks(album);
+
+    expect(result).toEqual([
+      { TrackId: 1, Name: 'Worm', AlbumId: "1" },
+      { TrackId: 2, Name: '444888', AlbumId: "1" }
+    ]); 
+  });
+
+  it('should return an empty array for an invalid album', async () => {
+    const album = { AlbumId: 999 };
+    const result = await resolvers.Album.tracks(album);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should throw an error if database connection fails while fetching album tracks', async () => {
+    (connectToDb as any).mockRejectedValueOnce(new Error('Failed to fetch tracks'));
+
+    const album = { AlbumId: 1 };
+
+    await expect(resolvers.Album.tracks(album))
+      .rejects
+      .toThrow('Failed to fetch tracks');
   });
 });
