@@ -181,4 +181,27 @@ query {
 }
 ```
 
+##### Returns artist with id 5 and associated albums and tracks
+
+```gql
+query {
+  artist(id: 5) {
+    id
+    name
+    albums {
+      id
+      title
+    }
+    tracks {
+      id
+      name
+      composer
+      milliseconds
+      bytes
+      price
+    }
+  }
+}
+```
+
 ## Run tests

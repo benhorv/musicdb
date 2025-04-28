@@ -10,12 +10,13 @@ export const typeDefs = `#graphql
     id: ID!
     name: String!
     albums: [Album!]!
+    tracks: [Track!]!
   }
 
   type Track {
     id: ID!
     name: String!
-    composer: String!
+    composer: String
     milliseconds: Int!
     bytes: Int!
     price: Float!
